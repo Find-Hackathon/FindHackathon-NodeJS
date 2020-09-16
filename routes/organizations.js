@@ -1,7 +1,4 @@
 var express = require('express');
-const {
-    subscribe
-} = require('../app');
 var router = express.Router();
 const Organization = require('../models/organizations');
 
@@ -10,7 +7,7 @@ router.post('/createOrganization', function (req, res, next) {
     const promise = organization.save();
     promise.then((data) => {
         res.json({
-            success: true
+            success: true,
         });
     }).catch((err) => {
         res.json({
@@ -18,54 +15,62 @@ router.post('/createOrganization', function (req, res, next) {
         });
     });
 });
-
 router.post('/organizaionSubscribe/:id', function (req, res, next) {
 
-    const promiseget = Organization.aggregate([{
-        $project: {
-            sizeOfArray: {
-                $size: "$attendees"
-            }
-        }
-    }]);
-    promiseget.then((data) => {
-        var arraySize = data[0].sizeOfArray;
-        if (arraySize < 25) {
-            const promise = Organization.updateOne({
-                "id": req.params.id
-            }, {
-                $push: {
-                    attendees: req.body
-                }
-            });
-            promise.then((data) => {
-                res.json({
-                    isSucces: true
+    const promise = Organization.findOne({
+        id: req.params.id
+    });
+    promise.then((data) => {
+        var doc = data;
+        console.log(doc.attendees.length);
+        if (doc.closed == false) {
+            if (doc.attendees.length == 25) {
+                const promisee = Organization.updateOne({
+                    id: req.params.id
+                }, {
+                    $set: {
+                        closed: true
+                    }
+
+                }, {
+                    $push: {
+                        attendees: req.body
+                    }
                 });
-            }).catch((err) => {
-                res.json({
-                    isSucces: false
+                promisee.then((data) => {
+                    res.json({
+                        closedValue: false
+                    });
+                }).catch((err) => {
+                    res.json({
+                        closedValue: true
+                    });
                 });
-            });
+                res.json({
+                    errorMessage: "Grup Doldu"
+                });
+            } else {
+
+                const promise = Organization.updateOne({
+                    id: req.params.id
+                }, {
+                    $push: {
+                        attendees: req.body
+                    }
+                });
+                promise.then((data) => {
+                    res.json({
+                        isSucces: true
+                    });
+                }).catch((err) => {
+                    res.json({
+                        isSucces: false
+                    });
+                });
+            };
         } else {
-            const promisee = Organization.updateOne({
-                "id": req.params.id
-            }, {
-                $set: {
-                    closed: true
-                }
-            });
-            promisee.then((data) => {
-                res.json({
-                    isSucces: true
-                });
-            }).catch((err) => {
-                res.json({
-                    isSucces: false
-                });
-            });
             res.json({
-                errorMessage: "Gruplar Doldu"
+                errorMessage: "Grup Doldu.."
             });
         }
     }).catch((err) => {
