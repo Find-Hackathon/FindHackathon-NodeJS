@@ -48,6 +48,22 @@ router.post('/organizaionSubscribe/:id', function (req, res, next) {
                 });
             });
         } else {
+            const promisee = Organization.updateOne({
+                "id": req.params.id
+            }, {
+                $set: {
+                    closed: true
+                }
+            });
+            promisee.then((data) => {
+                res.json({
+                    isSucces: true
+                });
+            }).catch((err) => {
+                res.json({
+                    isSucces: false
+                });
+            });
             res.json({
                 errorMessage: "Gruplar Doldu"
             });
@@ -57,7 +73,6 @@ router.post('/organizaionSubscribe/:id', function (req, res, next) {
             errorMessage: "Kullanıcı Bulunamadı"
         });
     });
-
 
 });
 
@@ -70,8 +85,6 @@ router.get('/all', function (req, res, next) {
             errorMessage: "Kullanıcı Bulunamadı"
         });
     });
-
-
 });
 
 router.get('/id/:id', function (req, res, next) {
@@ -88,9 +101,6 @@ router.get('/id/:id', function (req, res, next) {
 
 
 });
-
-
-
 
 
 module.exports = router;
