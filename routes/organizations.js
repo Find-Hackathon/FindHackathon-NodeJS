@@ -21,22 +21,44 @@ router.post('/createOrganization', function (req, res, next) {
 
 router.post('/organizaionSubscribe/:id', function (req, res, next) {
 
-    const promise = Organization.updateOne({
-        "id": req.params.id
-    }, {
-        $push: {
-            attendees: req.body
+    const promiseget = Organization.aggregate([{
+        $project: {
+            sizeOfArray: {
+                $size: "$attendees"
+            }
         }
-    });
-    promise.then((data) => {
-        res.json({
-            isSucces: true
-        });
+    }]);
+    promiseget.then((data) => {
+        var arraySize = data[0].sizeOfArray;
+        if (arraySize < 25) {
+            const promise = Organization.updateOne({
+                "id": req.params.id
+            }, {
+                $push: {
+                    attendees: req.body
+                }
+            });
+            promise.then((data) => {
+                res.json({
+                    isSucces: true
+                });
+            }).catch((err) => {
+                res.json({
+                    isSucces: false
+                });
+            });
+        } else {
+            res.json({
+                errorMessage: "Gruplar Doldu"
+            });
+        }
     }).catch((err) => {
         res.json({
-            isSucces: false
+            errorMessage: "Kullanıcı Bulunamadı"
         });
     });
+
+
 });
 
 router.get('/all', function (req, res, next) {
