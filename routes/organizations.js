@@ -39,51 +39,36 @@ router.post('/organizaionSubscribe/:id', function (req, res, next) {
     });
 });
 
-router.get('/:id', function (req, res, next) {
-    res.send("succes");
-});
-
-
-
-router.delete('/:id', function (req, res, next) {
-    const promise = User.updateOne({
-        "id": req.params.id
-    }, {
-        $set: req.body
-    });
+router.get('/all', function (req, res, next) {
+    const promise = Organization.find({});
     promise.then((data) => {
-        res.json({
-            isSucces: true
-        });
+        res.json(data);
     }).catch((err) => {
         res.json({
-            isSucces: false
+            errorMessage: "Kullanıcı Bulunamadı"
         });
-
     });
 
 
 });
 
-router.put('/:id', function (req, res, ) {
-    const promise = Organization.updateOne({
-        "id": req.params.id
-    }, {
-        $set: req.body
+router.get('/id/:id', function (req, res, next) {
+    const promise = Organization.findOne({
+        id: req.params.id
     });
     promise.then((data) => {
-        res.json({
-            isSucces: true
-        });
+        res.json(data);
     }).catch((err) => {
         res.json({
-            isSucces: false
+            errorMessage: "Kullanıcı Bulunamadı"
         });
-
     });
 
 
 });
+
+
+
 
 
 module.exports = router;

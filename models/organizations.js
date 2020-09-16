@@ -21,6 +21,10 @@ const OrganizationsSchema = new Schema({
         type: String,
         required: true,
     },
+    capacity: {
+        type: Number,
+        default: 25,
+    },
     attendees: [{
         subscribe: {
             type: String,
