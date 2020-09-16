@@ -54,10 +54,11 @@ router.delete('/:id', function (req, res, next) {
 
 
 router.put('/:id', function (req, res, ) {
-  const promise = User.findByAndUpdate(
-    req.params.id,
-    req.body
-  );
+  const promise = User.updateOne({
+    "id": req.params.id
+  }, {
+    $set: req.body
+  });
   promise.then((data) => {
     res.json({
       isSucces: true
@@ -71,7 +72,6 @@ router.put('/:id', function (req, res, ) {
 
 
 });
-
 
 
 module.exports = router;
