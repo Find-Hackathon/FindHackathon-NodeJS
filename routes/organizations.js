@@ -32,12 +32,6 @@ router.post('/organizaionSubscribe/:id', function (req, res, next) {
                     $set: {
                         closed: true
                     }
-
-
-                }, {
-                    $push: {
-                        attendees: req.body
-                    }
                 }, );
                 var attendeesList = [];
 
