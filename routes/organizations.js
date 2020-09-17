@@ -25,7 +25,7 @@ router.post('/organizaionSubscribe/:id', function (req, res, next) {
         var doc = data;
         console.log(doc.attendees.length);
         if (doc.closed == false) {
-            if (doc.attendees.length == 25) {
+            if (doc.attendees.length == 24) {
                 const promisee = Organization.updateOne({
                     id: req.params.id
                 }, {
@@ -33,12 +33,19 @@ router.post('/organizaionSubscribe/:id', function (req, res, next) {
                         closed: true
                     }
 
+
+                }, {
+                    $push: {
+                        attendees: req.body
+                    }
                 }, );
                 var attendeesList = [];
 
                 doc.attendees.forEach(element => {
                     attendeesList.push(element.subscribe);
                 });
+                attendeesList.push(req.body.subscribe);
+
 
                 shuffle(attendeesList);
                 console.log(attendeesList);
