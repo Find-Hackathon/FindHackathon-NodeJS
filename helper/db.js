@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 module.exports = () => {
-    mongoose.connect('mongodb://localhost:27017/FH', {
+    mongoose.connect('mongodb+srv://samedbicer:888999000@cluster0.5no4a.mongodb.net/FH?retryWrites=true&w=majority', {
         useMongoClient: true
     });
     mongoose.connection.on('open', () => {
