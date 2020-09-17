@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const Organization = require('../models/organizations');
+const Team = require('../models/teams');
 
 router.post('/createOrganization', function (req, res, next) {
     const organization = new Organization(req.body);
@@ -43,6 +44,23 @@ router.post('/organizaionSubscribe/:id', function (req, res, next) {
                 console.log(attendeesList);
                 for (i = 0; i < 5; i++) {
                     var indexList = attendeesList.filter(word => attendeesList.indexOf(word) % 5 == i);
+                    const team = Team({
+                        name: req.params.id + i,
+                        attendees: [{
+                                subscribe: indexList[0]
+                            },
+                            {
+                                subscribe: indexList[1]
+                            }, {
+                                subscribe: indexList[2]
+                            }, {
+                                subscribe: indexList[3]
+                            }, {
+                                subscribe: indexList[4]
+                            },
+                        ]
+                    });
+                    team.save();
                     console.log(indexList);
                 }
                 res.json({

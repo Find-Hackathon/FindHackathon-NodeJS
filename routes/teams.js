@@ -2,35 +2,47 @@ var express = require('express');
 var router = express.Router();
 const Teams = require('../models/teams');
 
-router.post('/', function (req, res, next) {
-    const user = new Teams(req.body);
-    const promise = user.save();
+router.get('/all', function (req, res, next) {
+    const promise = Teams.find({});
     promise.then((data) => {
-        res.json({
-            success: true
-        });
+        res.json(data);
     }).catch((err) => {
         res.json({
-            errorMessage: "Veri Kaydedilmedi"
+            errorMessage: "Gruplar Bulunamadı"
         });
     });
 });
 
-/* GET users listing. */
-router.get('/:id', function (req, res, next) {
+router.get('/name/:name', function (req, res, next) {
     const promise = Teams.findOne({
+        name: req.params.name
+    });
+    promise.then((data) => {
+        res.json(data);
+    }).catch((err) => {
+        res.json({
+            errorMessage: "Grup Bulunamadı"
+        });
+    });
+
+
+});
+
+
+router.get('/user/:id', function (req, res, next) {
+    const promise = Teams.find({
         id: req.params.id
     });
     promise.then((data) => {
         res.json(data);
     }).catch((err) => {
         res.json({
-            errorMessage: "Kullanıcı Bulunamadı"
+            errorMessage: "Grup Bulunamadı"
         });
     });
 
 
-});
+})
 
 
 
