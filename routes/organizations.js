@@ -47,6 +47,7 @@ router.post('/organizaionSubscribe/:id', function (req, res, next) {
                 doc.attendees.forEach(element => {
                     attendeesList.push(element.subscribe);
                 });
+                shuffle(attendeesList);
                 console.log(attendeesList);
                 res.json({
                     errorMessage: "Grup Doldu"
@@ -110,6 +111,24 @@ router.get('/id/:id', function (req, res, next) {
 
 
 });
+
+function shuffle(arra1) {
+    var ctr = arra1.length,
+        temp, index;
+
+    // While there are elements in the array
+    while (ctr > 0) {
+        // Pick a random index
+        index = Math.floor(Math.random() * ctr);
+        // Decrease ctr by 1
+        ctr--;
+        // And swap the last element with it
+        temp = arra1[ctr];
+        arra1[ctr] = arra1[index];
+        arra1[index] = temp;
+    }
+    return arra1;
+}
 
 
 module.exports = router;
