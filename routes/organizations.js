@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const Organization = require('../models/organizations');
+const Team = require('../models/teams');
 
 router.post('/createOrganization', function (req, res, next) {
     const organization = new Organization(req.body);
@@ -24,7 +25,7 @@ router.post('/organizaionSubscribe/:id', function (req, res, next) {
         var doc = data;
         console.log(doc.attendees.length);
         if (doc.closed == false) {
-            if (doc.attendees.length == 25) {
+            if (doc.attendees.length == 24) {
                 const promisee = Organization.updateOne({
                     id: req.params.id
                 }, {
@@ -32,23 +33,47 @@ router.post('/organizaionSubscribe/:id', function (req, res, next) {
                         closed: true
                     }
 
+
                 }, {
                     $push: {
                         attendees: req.body
                     }
+                }, );
+                var attendeesList = [];
+
+                doc.attendees.forEach(element => {
+                    attendeesList.push(element.subscribe);
                 });
-                promisee.then((data) => {
-                    res.json({
-                        closedValue: false
+                attendeesList.push(req.body.subscribe);
+
+
+                shuffle(attendeesList);
+                console.log(attendeesList);
+                for (i = 0; i < 5; i++) {
+                    var indexList = attendeesList.filter(word => attendeesList.indexOf(word) % 5 == i);
+                    const team = Team({
+                        name: req.params.id + i,
+                        attendees: [{
+                                subscribe: indexList[0]
+                            },
+                            {
+                                subscribe: indexList[1]
+                            }, {
+                                subscribe: indexList[2]
+                            }, {
+                                subscribe: indexList[3]
+                            }, {
+                                subscribe: indexList[4]
+                            },
+                        ]
                     });
-                }).catch((err) => {
-                    res.json({
-                        closedValue: true
-                    });
-                });
+                    team.save();
+                    console.log(indexList);
+                }
                 res.json({
                     errorMessage: "Grup Doldu"
                 });
+
             } else {
 
                 const promise = Organization.updateOne({
@@ -69,6 +94,8 @@ router.post('/organizaionSubscribe/:id', function (req, res, next) {
                 });
             };
         } else {
+
+
             res.json({
                 errorMessage: "Grup Doldu.."
             });
@@ -106,6 +133,24 @@ router.get('/id/:id', function (req, res, next) {
 
 
 });
+
+function shuffle(arra1) {
+    var ctr = arra1.length,
+        temp, index;
+
+    // While there are elements in the array
+    while (ctr > 0) {
+        // Pick a random index
+        index = Math.floor(Math.random() * ctr);
+        // Decrease ctr by 1
+        ctr--;
+        // And swap the last element with it
+        temp = arra1[ctr];
+        arra1[ctr] = arra1[index];
+        arra1[index] = temp;
+    }
+    return arra1;
+}
 
 
 module.exports = router;
