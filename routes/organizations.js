@@ -33,7 +33,18 @@ router.post('/organizaionSubscribe/:id', function (req, res, next) {
                     }
 
                 }, );
+                var attendeesList = [];
 
+                doc.attendees.forEach(element => {
+                    attendeesList.push(element.subscribe);
+                });
+
+                shuffle(attendeesList);
+                console.log(attendeesList);
+                for (i = 0; i < 5; i++) {
+                    var indexList = attendeesList.filter(word => attendeesList.indexOf(word) % 5 == i);
+                    console.log(indexList);
+                }
                 res.json({
                     errorMessage: "Grup Doldu"
                 });
@@ -58,16 +69,8 @@ router.post('/organizaionSubscribe/:id', function (req, res, next) {
                 });
             };
         } else {
-            var attendeesList = [];
 
-            doc.attendees.forEach(element => {
-                attendeesList.push(element.subscribe);
-            });
 
-            shuffle(attendeesList);
-            console.log(attendeesList);
-            var indexList = attendeesList.filter(word => indexList.indexOf(word) % 5 == 2);
-            console.log(indexList);
             res.json({
                 errorMessage: "Grup Doldu.."
             });
