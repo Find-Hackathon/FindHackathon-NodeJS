@@ -50,6 +50,7 @@ router.post('/organizaionSubscribe/:id', function (req, res, next) {
                 for (i = 0; i < 5; i++) {
                     var indexList = attendeesList.filter(word => attendeesList.indexOf(word) % 5 == i);
                     const team = Team({
+                        id: req.params.id,
                         name: req.params.id + i,
                         attendees: [{
                                 subscribe: indexList[0]
