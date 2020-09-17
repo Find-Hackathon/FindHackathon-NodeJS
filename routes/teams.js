@@ -31,7 +31,7 @@ router.get('/name/:name', function (req, res, next) {
 
 router.get('/user/:id', function (req, res, next) {
     const promise = Teams.find({
-        id: req.params.id
+        "attendees.subscribe": req.params.id
     });
     promise.then((data) => {
         res.json(data);
