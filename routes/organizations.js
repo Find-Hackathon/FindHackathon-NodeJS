@@ -32,6 +32,10 @@ router.post('/organizaionSubscribe/:id', function (req, res, next) {
                     $set: {
                         closed: true
                     }
+                }, {
+                    $push: {
+                        attendees: req.body
+                    }
                 }, );
                 var attendeesList = [];
 
@@ -64,8 +68,14 @@ router.post('/organizaionSubscribe/:id', function (req, res, next) {
                     team.save();
                     console.log(indexList);
                 }
-                res.json({
-                    errorMessage: "Grup Doldu"
+                promisee.then((data) => {
+                    res.json({
+                        message: "Gruplar Doldu"
+                    });
+                }).catch((err) => {
+                    res.json({
+                        isSucces: false
+                    });
                 });
 
             } else {
