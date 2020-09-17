@@ -33,22 +33,7 @@ router.post('/organizaionSubscribe/:id', function (req, res, next) {
                     }
 
                 }, );
-                promisee.then((data) => {
-                    res.json({
-                        closedValue: false
-                    });
-                }).catch((err) => {
-                    res.json({
-                        closedValue: true
-                    });
-                });
-                var attendeesList = [];
 
-                doc.attendees.forEach(element => {
-                    attendeesList.push(element.subscribe);
-                });
-                shuffle(attendeesList);
-                console.log(attendeesList);
                 res.json({
                     errorMessage: "Grup Doldu"
                 });
@@ -73,7 +58,16 @@ router.post('/organizaionSubscribe/:id', function (req, res, next) {
                 });
             };
         } else {
+            var attendeesList = [];
 
+            doc.attendees.forEach(element => {
+                attendeesList.push(element.subscribe);
+            });
+
+            shuffle(attendeesList);
+            console.log(attendeesList);
+            var indexList = attendeesList.filter(word => indexList.indexOf(word) % 5 == 2);
+            console.log(indexList);
             res.json({
                 errorMessage: "Grup Doldu.."
             });
