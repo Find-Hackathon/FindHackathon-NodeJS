@@ -32,11 +32,7 @@ router.post('/organizaionSubscribe/:id', function (req, res, next) {
                         closed: true
                     }
 
-                }, {
-                    $push: {
-                        attendees: req.body
-                    }
-                });
+                }, );
                 promisee.then((data) => {
                     res.json({
                         closedValue: false
@@ -46,9 +42,16 @@ router.post('/organizaionSubscribe/:id', function (req, res, next) {
                         closedValue: true
                     });
                 });
+                var attendeesList = [];
+
+                doc.attendees.forEach(element => {
+                    attendeesList.push(element.subscribe);
+                });
+                console.log(attendeesList);
                 res.json({
                     errorMessage: "Grup Doldu"
                 });
+
             } else {
 
                 const promise = Organization.updateOne({
@@ -69,6 +72,7 @@ router.post('/organizaionSubscribe/:id', function (req, res, next) {
                 });
             };
         } else {
+
             res.json({
                 errorMessage: "Grup Doldu.."
             });
